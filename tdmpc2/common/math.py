@@ -22,9 +22,10 @@ def gaussian_logprob(eps, log_std):
 
 def squash(mu, pi, log_pi):
 	"""Apply squashing function."""
+	# log(1 - tanh(pi)^2), evaluated before tanh saturates.
+	squashed_pi = 2 * (0.6931471805599453 - pi - F.softplus(-2 * pi))
 	mu = torch.tanh(mu)
 	pi = torch.tanh(pi)
-	squashed_pi = torch.log(F.relu(1 - pi.pow(2)) + 1e-6)
 	log_pi = log_pi - squashed_pi.sum(-1, keepdim=True)
 	return mu, pi, log_pi
 
