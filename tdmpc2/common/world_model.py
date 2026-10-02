@@ -95,7 +95,7 @@ class WorldModel(nn.Module):
 			task = torch.tensor([task], device=x.device)
 		emb = self._task_emb(task.long())
 		if x.ndim == 3:
-			emb = emb.unsqueeze(0).repeat(x.shape[0], 1, 1)
+			emb = emb.unsqueeze(0).expand(x.shape[0], x.shape[1], -1)
 		elif emb.shape[0] == 1:
 			emb = emb.repeat(x.shape[0], 1)
 		return torch.cat([x, emb], dim=-1)
